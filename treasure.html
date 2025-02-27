@@ -44,12 +44,13 @@
 </head>
 <body class="bg-light">
 
-<h2>Komala Digs for Treasure</h2>
-<p>Click on the locations to find silver and gold, watch out for the rattlesnake</p>
-<div id="locations">Number of locations checked is zero.</div>
-<div id="score">Score is zero.</div>
-<div>Click for help.</div>
+<h2><b><i>Komala Digs for Treasure</b></i></h2>
+<p><i>Click on the locations to find silver and gold, watch out for the rattlesnake</i></p>
+<div id="locations"><i>Number of locations checked is zero.</i></div>
+<div id="score"><i>Score is zero.</i></div>
+<div><i>Click for help.</i></div>
 <div id="help">Help report</div>
+
 
     <div class="container">
         <h2 class="mt-4 text-center">Image Grid Game</h2>
@@ -68,19 +69,23 @@
             "images/snake.jpg",         
             "images/pottery.jpg"       
         ];
+
       
         const gameGrid = document.getElementById('gameGrid');
 
+        
         for (let row = 0; row < 5; row++) {
             const rowDiv = document.createElement('div');
             rowDiv.classList.add('game-row');
             
+            
             for (let col = 0; col < 7; col++) {
                 const cellDiv = document.createElement('div');
                 cellDiv.classList.add('game-cell');
+
                 
                 const img = document.createElement('img');
-                img.src = images[(row * 7 + col) % images.length];  // Alternate images
+                img.src = images[(row * 7 + col) % images.length]; 
                 img.alt = "Game Item";
                
                 cellDiv.appendChild(img);
