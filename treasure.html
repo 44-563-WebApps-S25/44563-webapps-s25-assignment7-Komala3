@@ -52,13 +52,13 @@
 <div id="help">Help report</div>
 
 
-    <div class="container">
+    
         <h2 class="mt-4 text-center">Image Grid Game</h2>
 
         <div class="game-grid" id="gameGrid">
            
         </div>
-    </div>
+    
 
     <script>
         
@@ -85,8 +85,8 @@
 
                 
                 const img = document.createElement('img');
-                img.src = images[(row * 7 + col) % images.length]; 
-                img.alt = "Game Item";
+                img.src = "images/cactus.png"; // Set cactus image directly
+                img.alt = "Cactus";
                
                 cellDiv.appendChild(img);
  
