@@ -4,97 +4,127 @@
   <title>Komala Digs for Treasure</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" 
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" 
-    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-
-    <title>Image Grid Game</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 150px);  
-            grid-template-rows: repeat(5, 150px);     
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .game-cell {
-            width: 150px;
-            height: 150px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-        }
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .game-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 100px); /* 7 columns */
+        grid-template-rows: repeat(5, 100px);    /* 5 rows */
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .game-cell {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+  </style>
 </head>
 <body class="bg-light">
+  <h2><b><i>Komala Digs for Treasure</b></i></h2>
+  <p><i>Click on the locations to find silver and gold, watch out for the rattlesnake</i></p>
+  <div id="locations"><i>Number of locations checked is zero.</i></div>
+  <div id="score"><i>Score is zero.</i></div>
+  <button onclick="help()">Click for help</button>
+  <div id="help">Help report</div>
 
-<h2><b><i>Komala Digs for Treasure</b></i></h2>
-<p><i>Click on the locations to find silver and gold, watch out for the rattlesnake</i></p>
-<div id="locations"><i>Number of locations checked is zero.</i></div>
-<div id="score"><i>Score is zero.</i></div>
-<div><i>Click for help.</i></div>
-<div id="help">Help report</div>
+  <!-- Grid Container -->
+  <div class="game-grid" id="gameGrid"></div>
 
+  <script>
+    const images = [
+        "images/cactus.png",        // 0: Cactus
+        "images/gold_nugget.png",   // 1: Gold
+        "images/silver_coin.jpg",   // 2: Silver
+        "images/snake.jpg",         // 3: Snake
+        "images/pottery.jpg"        // 4: Pottery
+    ];
 
-    
-        <h2 class="mt-4 text-center">Image Grid Game</h2>
+    const gameGrid = document.getElementById('gameGrid');
+    const ids = Array.from({ length: 35 }, (_, i) => `img${i}`); 
+    let score = 0;
+    let locationsVisited = 0;
+    let lastLocation = 0;
+    const silverLocations = [2, 5, 11, 21, 32]; 
+    const goldLocation = 15; 
+    const snakeLocation = 20; 
+    let gameOver = false;
 
-        <div class="game-grid" id="gameGrid">
-           
-        </div>
-    
+    //5x7 grid
+    for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 7; col++) {
+            const cellDiv = document.createElement('div');
+            cellDiv.classList.add('game-cell');
 
-    <script>
-        
-        const images = [
-            "images/cactus.png",        
-            "images/gold_nugget.png",   
-            "images/silver_coin.jpg",  
-            "images/snake.jpg",         
-            "images/pottery.jpg"       
-        ];
-
-      
-        const gameGrid = document.getElementById('gameGrid');
-
-        
-        for (let row = 0; row < 5; row++) {
-            const rowDiv = document.createElement('div');
-            rowDiv.classList.add('game-row');
-            
-            
-            for (let col = 0; col < 7; col++) {
-                const cellDiv = document.createElement('div');
-                cellDiv.classList.add('game-cell');
-
-                
-                const img = document.createElement('img');
-                img.src = "images/cactus.png"; // Set cactus image directly
-                img.alt = "Cactus";
-               
-                cellDiv.appendChild(img);
- 
-                rowDiv.appendChild(cellDiv);
-            }
-
-            gameGrid.appendChild(rowDiv);
+            const img = document.createElement('img');
+            const index = row * 7 + col; 
+            img.id = `img${index}`; 
+            img.src = images[0]; 
+            img.alt = "Cactus";
+            img.onclick = () => check(index); 
+            cellDiv.appendChild(img);
+            gameGrid.appendChild(cellDiv);
         }
-    </script>
+    }
+
+    // Function to handle cell clicks
+    function check(position) {
+        if (gameOver) return;
+
+        const imgElement = document.getElementById(ids[position]);
+        if (position === goldLocation) {
+            imgElement.src = images[1]; 
+            score += 5;
+        } else if (silverLocations.includes(position)) {
+            imgElement.src = images[2]; 
+            score += 3;
+        } else if (position === snakeLocation) {
+            imgElement.src = images[3]; 
+            gameOver = true;
+            score -= 3;
+            document.getElementById("help").textContent = "Game Over! You clicked the snake.";
+        } else {
+            imgElement.src = images[4]; 
+            score += 1;
+        }
+
+        locationsVisited++;
+        document.getElementById("locations").textContent = `Number of locations checked is ${locationsVisited}.`;
+        document.getElementById("score").textContent = `Score is ${score}.`;
+        lastLocation = position;
+    }
+
+    // Function - help
+    function help() {
+        const row = Math.floor(lastLocation / 7);
+        const col = lastLocation % 7;
+
+        const neighbors = [
+            lastLocation - 1,
+            lastLocation + 1,
+            lastLocation - 7,
+            lastLocation + 7
+        ].filter(pos => pos >= 0 && pos < 35);
+
+        if (neighbors.some(pos => silverLocations.includes(pos))) {
+            document.getElementById("help").textContent = "clink";
+        } else if (Math.abs(row - Math.floor(snakeLocation / 7)) <= 1 && Math.abs(col - (snakeLocation % 7)) <= 1) {
+            document.getElementById("help").textContent = "rattle";
+        } else {
+            document.getElementById("help").textContent = "wind";
+        }
+    }
+  </script>
 </body>
 </html>
