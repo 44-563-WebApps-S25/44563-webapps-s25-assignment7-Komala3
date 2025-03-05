@@ -31,49 +31,42 @@
 
   <script>
     let haltTime;
-    let countdownActive = false; 
+    let countdownActive = false;
 
-    
     function recordTime() {
-      console.log("Halt button pressed"); 
       if (!countdownActive) {
         alert("Press 'Go' to start the countdown first!");
         return;
       }
-      haltTime = Date.now(); 
-      console.log("Halt time recorded:", haltTime); 
+      haltTime = Date.now();
+      console.log("Halt time recorded:", haltTime);
+
+      const targetTime = Date.now();
+      const elapsedTime = targetTime - haltTime;
+      document.getElementById("target").textContent = `Time was ${elapsedTime} ms`;
+      countdownActive = false; // Stop countdown when button is clicked
     }
 
-    // Function to start the countdown
     function beginTime() {
-      console.log("Go button pressed"); 
-      haltTime = undefined; 
-      countdownActive = true; 
+      haltTime = undefined;
+      countdownActive = true;
       document.getElementById("target").textContent = "Your time";
       document.getElementById("counter").textContent = "Count";
 
-      // Countdown from 5 to 0
-      for (let i = 5; i >= 0; i--) {
+      const startTime = Math.floor(Math.random() * 9) + 2; // Random time between 2-10 seconds
+
+      for (let i = startTime; i >= 0; i--) {
         setTimeout(() => {
-          console.log("Countdown:", i); 
           document.getElementById("counter").textContent = i;
-        }, (5 - i) * 1000); 
+        }, (startTime - i) * 1000);
       }
 
-      // After 5 seconds, check the user's reaction time
       setTimeout(() => {
-        console.log("Countdown ended"); 
-        countdownActive = false; 
-        if (haltTime === undefined) { 
-          console.log("User was too slow"); 
+        countdownActive = false;
+        if (haltTime === undefined) {
           document.getElementById("target").textContent = "Not soon enough";
-        } else {
-          const targetTime = Date.now();
-          const elapsedTime = targetTime - haltTime;
-          console.log("Elapsed time:", elapsedTime); 
-          document.getElementById("target").textContent = `Time was ${elapsedTime} ms`;
         }
-      }, 5000); // Wait 5 seconds before checking
+      }, startTime * 1000);
     }
   </script>
 </body>

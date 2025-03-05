@@ -28,6 +28,7 @@
   <button onclick="addEnd()">Add end</button>
   <button onclick="addFront()">Add front</button>
   <button onclick="remove()">Remove</button>
+  <button onclick="promote()">Promote</button>
 
   <div class="flex-container" id="flexContainer">
     <!-- Initial items can be added here if needed -->
@@ -82,6 +83,21 @@
         divListItems[middleIndex].remove(); // Remove the middle item
       } else {
         alert("No items to remove!");
+      }
+    }
+
+    // Function to promote a random item one position forward
+    function promote() {
+      const divListItems = document.getElementsByClassName("divlist");
+      const length = divListItems.length;
+
+      if (length > 1) {
+        const randomIndex = Math.floor(Math.random() * (length - 1)) + 1; // Random index (not the first item)
+        const container = document.getElementById("flexContainer");
+        const selectedItem = divListItems[randomIndex];
+        container.insertBefore(selectedItem, divListItems[randomIndex - 1]); // Move the item one position forward
+      } else {
+        alert("Not enough items to promote!");
       }
     }
   </script>
