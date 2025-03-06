@@ -73,8 +73,9 @@
       document.getElementById("target").innerHTML = "Your time";
       document.getElementById("counter").innerHTML = "Count";
 
+      // Randomly choose a countdown starting value between 2 and 10
       let randomStart = Math.floor(Math.random() * 9) + 2; 
-      countdownStartTime = Date.now() + randomStart * 1000; 
+      countdownStartTime = Date.now(); // Start time now
       console.log("Random Start Time:", randomStart);
 
       for (let i = randomStart; i >= 0; i--) {
@@ -82,7 +83,7 @@
           if (!countdownActive) return; 
           console.log("Countdown:", i);
           document.getElementById("counter").innerHTML = i;
-        }, (randomStart - i) * 1000);
+        }, (5 - i) * 1000); // Adjusting timeout to (5 - i) * 1000
         countdownTimeouts.push(timeout); 
       }
 
@@ -92,7 +93,7 @@
         if (haltTime === undefined) {
           document.getElementById("target").innerHTML = "Not soon enough"; 
         }
-      }, randomStart * 1000);
+      }, 5 * 1000); // Ensure countdown ends after 5 seconds
       countdownTimeouts.push(finalTimeout); 
     }
   </script>
