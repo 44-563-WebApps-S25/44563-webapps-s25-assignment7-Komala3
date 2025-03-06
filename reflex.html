@@ -32,41 +32,68 @@
   <script>
     let haltTime;
     let countdownActive = false;
+    let countdownTimeouts = [];
+    let countdownStartTime;
 
+    // Function to record the halt time and stop the countdown
     function recordTime() {
+      console.log("Halt button pressed");
       if (!countdownActive) {
         alert("Press 'Go' to start the countdown first!");
         return;
       }
-      haltTime = Date.now();
+      haltTime = Date.now(); 
       console.log("Halt time recorded:", haltTime);
+      countdownActive = false;
+      clearCountdown(); 
 
-      const targetTime = Date.now();
-      const elapsedTime = targetTime - haltTime;
-      document.getElementById("target").textContent = `Time was ${elapsedTime} ms`;
-      countdownActive = false; // Stop countdown when button is clicked
+      // Calculate and display elapsed time
+      let elapsedTime = haltTime - countdownStartTime;
+      console.log("Elapsed Time:", elapsedTime);
+      if (elapsedTime >= 0) {
+        document.getElementById("target").innerHTML = `Time was ${elapsedTime} ms`;
+      } else {
+        document.getElementById("target").innerHTML = "Too soon!";
+      }
     }
 
+    // Function to clear all countdown timeouts
+    function clearCountdown() {
+      for (let timeout of countdownTimeouts) {
+        clearTimeout(timeout);
+      }
+      countdownTimeouts = []; 
+    }
+
+    // Function to start the countdown
     function beginTime() {
+      console.log("Go button pressed");
       haltTime = undefined;
       countdownActive = true;
-      document.getElementById("target").textContent = "Your time";
-      document.getElementById("counter").textContent = "Count";
+      document.getElementById("target").innerHTML = "Your time";
+      document.getElementById("counter").innerHTML = "Count";
 
-      const startTime = Math.floor(Math.random() * 9) + 2; // Random time between 2-10 seconds
+      let randomStart = Math.floor(Math.random() * 9) + 2; 
+      countdownStartTime = Date.now() + randomStart * 1000; 
+      console.log("Random Start Time:", randomStart);
 
-      for (let i = startTime; i >= 0; i--) {
-        setTimeout(() => {
-          document.getElementById("counter").textContent = i;
-        }, (startTime - i) * 1000);
+      for (let i = randomStart; i >= 0; i--) {
+        let timeout = setTimeout(() => {
+          if (!countdownActive) return; 
+          console.log("Countdown:", i);
+          document.getElementById("counter").innerHTML = i;
+        }, (randomStart - i) * 1000);
+        countdownTimeouts.push(timeout); 
       }
 
-      setTimeout(() => {
-        countdownActive = false;
+      let finalTimeout = setTimeout(() => {
+        console.log("Countdown ended");
+        countdownActive = false; 
         if (haltTime === undefined) {
-          document.getElementById("target").textContent = "Not soon enough";
+          document.getElementById("target").innerHTML = "Not soon enough"; 
         }
-      }, startTime * 1000);
+      }, randomStart * 1000);
+      countdownTimeouts.push(finalTimeout); 
     }
   </script>
 </body>
